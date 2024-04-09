@@ -7,11 +7,11 @@ import com.tiduswr.parser.Parser;
 public class Main {
     public static void main(String[] args) throws IOException {
         // executa a parte sintática
-        /* 
-        var lexer = new Lexer("arquivo.mat");
-        try(var parser = new Parser(lexer)){
+        
+        var lexer1 = new Lexer("arquivo.mat");
+        try(var parser = new Parser(lexer1)){
             parser.parse();
-        }*/
+        }
 
         // executa a parte léxica
         try (var lexer = new Lexer("arquivo.mat")){
