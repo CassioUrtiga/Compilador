@@ -61,10 +61,54 @@ public class Parser implements Closeable{
     }
 
     public void parse(){
-        //Cascata de criação das regras da gramatica começa aqui
-        //Crie uma função para cada regra da gramática
+        while (!lookAhead(1).type().equals(TokenType.EOF)) {
+            expr();
+            match(TokenType.PONTO_VIRGULA);
+        }
+    }
+    
+    private void expr(){
+        var la = lookAhead(1);
+    
+        if (la.type() == TokenType.ABRE_PAR) {
+            match(TokenType.ABRE_PAR);
+            System.out.println("Token reconhecido: " + la.type());
+            expr();
+            if (lookAhead(1).type() == TokenType.FECHA_PAR) {
+                match(TokenType.FECHA_PAR);
+                System.out.println("Token reconhecido: " + TokenType.FECHA_PAR);
+            } else {
+                throw new SyntaxError(la, TokenType.FECHA_PAR);
+            }
+        } else if (la.type() == TokenType.CONST_INT || la.type() == TokenType.CONST_FLOAT) {
+            match(la.type());
+            System.out.println("Token reconhecido: " + la.type());
+            if (lookAhead(1).type() == TokenType.OP_SUM || lookAhead(1).type() == TokenType.OP_SUB || lookAhead(1).type() == TokenType.OP_MUL) {
+                op();
+                expr();
+            }
+        } else if (la.type() == TokenType.OP_SUM || la.type() == TokenType.OP_SUB || la.type() == TokenType.OP_MUL) {
+            op();
+            expr();
+            expr();
+        } else if (la.type() == TokenType.PONTO_VIRGULA) {
+            // Ignora o ponto e vírgula e termina a expressão
+        } else {
+            throw new SyntaxError(la, TokenType.ABRE_PAR, TokenType.OP_SUM, TokenType.OP_SUB, TokenType.OP_MUL, TokenType.CONST_INT, TokenType.CONST_FLOAT, TokenType.PONTO_VIRGULA);
+        }
     }
 
+    private void op() {
+        var la = lookAhead(1);
+    
+        if (la.type() == TokenType.OP_SUM || la.type() == TokenType.OP_SUB || la.type() == TokenType.OP_MUL || la.type() == TokenType.OP_DIV) {
+            match(la.type());
+            System.out.println("Operador reconhecido: " + la.type());
+        } else {
+            throw new SyntaxError(la, TokenType.OP_SUM, TokenType.OP_SUB, TokenType.OP_MUL, TokenType.OP_DIV);
+        }
+    }
+    
     @Override
     public void close() throws IOException {
         lexer.close();
