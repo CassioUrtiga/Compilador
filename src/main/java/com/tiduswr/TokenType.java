@@ -7,6 +7,7 @@ public enum TokenType {
     OP_SUB,
     OP_MUL,
     OP_DIV,
+    OPERADOR,
     ABRE_PAR,
     FECHA_PAR,
     PONTO_VIRGULA,
