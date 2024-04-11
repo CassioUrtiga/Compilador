@@ -63,8 +63,14 @@ public class Parser implements Closeable{
 
     public void parse(){
         System.out.print(" INICIO PARSE: "+ lookAhead(1).lexema());
-        expr(); 
-        System.out.print(" FIM PARSE: "+ lookAhead(1).lexema());
+        if (lookAhead(1).type() == TokenType.CONST_INT || lookAhead(1).type() == TokenType.CONST_FLOAT ) {
+            expr(); 
+            System.out.print(" FIM PARSE: "+ lookAhead(1).lexema()); 
+        }else{
+            prefixExpr();
+            System.out.print(" FIM PARSE: "+ lookAhead(1).lexema()); 
+        }
+        
     }   
     private void expr(){
         
@@ -75,7 +81,16 @@ public class Parser implements Closeable{
             System.out.print(" "+ lookAhead(1).lexema()); 
             expr(); 
         }
-
+    }
+    private void prefixExpr(){
+        
+        while(lookAhead(1).type() == TokenType.OP_SUM || lookAhead(1).type() == TokenType.OP_SUB){
+            Token op = lookAhead(1);
+            match(op.type());
+            System.out.print(" "+ lookAhead(1).lexema()); 
+            prefixExpr(); 
+        }
+        prefixTermo();
     }
     private void termo(){
         
@@ -88,6 +103,38 @@ public class Parser implements Closeable{
         }
 
     }
+    private void prefixTermo(){
+        
+        while(lookAhead(1).type() == TokenType.OP_MUL || lookAhead(1).type() == TokenType.OP_DIV){
+            Token op = lookAhead(1);
+            match(op.type());
+            System.out.print(" " + lookAhead(1).lexema()); 
+            prefixTermo();
+        }
+        prefixFator(); 
+
+    }
+    
+    private void prefixFator(){
+        
+        if(lookAhead(1).type() == TokenType.PONTO_VIRGULA){
+            match(TokenType.PONTO_VIRGULA);
+            System.out.print("ENTROU AQUI? " + lookAhead(1).type()); 
+        }
+        if (lookAhead(1).type() == TokenType.OP_DIV || lookAhead(1).type() == TokenType.OP_MUL || lookAhead(1).type() == TokenType.OP_SUB || lookAhead(1).type() == TokenType.OP_SUM ) {
+            match(lookAhead(1).type());
+            System.out.print(" " + lookAhead(1).lexema()); 
+            prefixExpr();
+        }
+        if (lookAhead(1).type() == TokenType.CONST_INT ) {
+            match(TokenType.CONST_INT);
+            System.out.print(" " + lookAhead(1).lexema()); 
+        }else if(lookAhead(1).type() != TokenType.EOF){
+            System.out.println("aquiiii: " + lookAhead(1));
+            match(TokenType.CONST_INT);
+        }
+    }
+
     private void fator(){
         if (lookAhead(1).type() == TokenType.OP_DIV || lookAhead(1).type() == TokenType.OP_MUL ||lookAhead(1).type() == TokenType.OP_SUB ||lookAhead(1).type() == TokenType.OP_SUM) {
             match(TokenType.CONST_INT);
