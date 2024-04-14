@@ -117,19 +117,16 @@ public class Parser implements Closeable{
     
     private void prefixFator(){
         
-        if(lookAhead(1).type() == TokenType.PONTO_VIRGULA){
-            match(TokenType.PONTO_VIRGULA);
-            System.out.print("ENTROU AQUI? " + lookAhead(1).type()); 
-        }
-        if (lookAhead(1).type() == TokenType.OP_DIV || lookAhead(1).type() == TokenType.OP_MUL || lookAhead(1).type() == TokenType.OP_SUB || lookAhead(1).type() == TokenType.OP_SUM ) {
-            match(lookAhead(1).type());
-            System.out.print(" " + lookAhead(1).lexema()); 
-            prefixExpr();
-        }
+        // if (lookAhead(1).type() == TokenType.OP_DIV || lookAhead(1).type() == TokenType.OP_MUL || lookAhead(1).type() == TokenType.OP_SUB || lookAhead(1).type() == TokenType.OP_SUM ) {
+        //     match(lookAhead(1).type());
+        //     System.out.print(" " + lookAhead(1).lexema()); 
+        //     prefixExpr();
+        // }
+        
         if (lookAhead(1).type() == TokenType.CONST_INT ) {
             match(TokenType.CONST_INT);
             System.out.print(" " + lookAhead(1).lexema()); 
-        }else if(lookAhead(1).type() != TokenType.EOF){
+        }else{
             System.out.println("aquiiii: " + lookAhead(1));
             match(TokenType.CONST_INT);
         }
