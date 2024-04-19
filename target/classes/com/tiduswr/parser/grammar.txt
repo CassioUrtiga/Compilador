@@ -1,3 +1,13 @@
-expr -> expr op expr | op expr expr | ( expr ) | id
-op -> + | - | *
-id -> NUM
+Infixa
+
+expr  -> expr op1 termo | termo
+termo -> termo op2 fator | fator
+fator -> NUM | '(' expr ')'
+op1   -> '+' | '-'
+op2   -> '*' | '/'
+
+Prefixa
+
+expr -> op fator fator
+fator -> expr | NUM
+op -> '+' | '-' | '*' | '/'
