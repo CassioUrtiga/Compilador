@@ -4,34 +4,41 @@ import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class Lexer implements Closeable{
-    
+public class Lexer implements Closeable {
+
     private Buffer buffer;
 
-    public Lexer(String programPath) throws FileNotFoundException{
+    public Lexer(String programPath) throws FileNotFoundException {
         buffer = new Buffer(programPath);
     }
 
     public Token readNextToken() throws IOException {
         int charAtual;
         StringBuilder lexema = new StringBuilder();
-    
+
         while ((charAtual = buffer.readNextChar()) != Buffer.EOF) {
             char charConvertido = (char) charAtual;
-
+            System.out.println("charconvertido: " + charConvertido);
+            // IGNORA ESPAÇOS EM BRANCO E PROCESSA O LEXEMA
             if (Character.isWhitespace(charConvertido)) {
+                System.out.println("vazio?: " + charConvertido);
+
                 if (lexema.length() > 0) {
+                    System.out.println("PROCESSA ESPACO: ");
                     return processaLexema(lexema.toString());
                 }
                 continue;
             }
-    
-            if (Character.isDigit(charConvertido) || charConvertido == '.' || (charConvertido == '-' && lexema.length() == 0)) {
+
+            if (Character.isDigit(charConvertido) || charConvertido == '.'
+                    || (charConvertido == '-' && lexema.length() == 0)) {
+                System.out.println("digito || - || . : " + charConvertido);
+
                 if (charConvertido == '-' && lexema.length() == 0) {
                     lexema.append(charConvertido);
                     continue;
                 }
-    
+
                 lexema.append(charConvertido);
 
                 while ((charAtual = buffer.readNextChar()) != Buffer.EOF) {
@@ -43,26 +50,31 @@ public class Lexer implements Closeable{
                         break;
                     }
                 }
-                
+                System.out.println("PROCESSA: ");
                 return processaLexema(lexema.toString());
             }
-
+            //TRATA COMENTARIOS
             if (charConvertido == '#') {
-                while ((charAtual = buffer.readNextChar()) != Buffer.EOF && charAtual != '\n') {}
+                System.out.println("##?: " + charConvertido);
+
+                while ((charAtual = buffer.readNextChar()) != Buffer.EOF && charAtual != '\n') {
+                }
                 continue;
             }
 
             lexema.append(charConvertido);
+            System.out.println("PROCESSA: " + lexema);
             return processaLexema(lexema.toString());
         }
-        
+
         if (lexema.length() > 0) {
+            System.out.println("PROCESSA: ");
             return processaLexema(lexema.toString());
         }
-    
+
         return new Token(TokenType.EOF, null);
     }
-    
+
     private Token processaLexema(String lexema) {
         switch (lexema) {
             case "(":
@@ -86,15 +98,19 @@ public class Lexer implements Closeable{
                     } else {
                         return new Token(TokenType.CONST_INT, lexema);
                     }
-                }else {
-                    return new Token(TokenType.EOF, null);
+                } else if (lexema.equals("")) {
+                    return new Token(TokenType.EOF, null); // Fim de arquivo
+                } else {
+                    System.out.println("erro?: ");
+                    throw new IllegalArgumentException("Erro de sintaxe: " + lexema);
                 }
         }
     }
-    
+
     @Override
     public void close() throws IOException {
-        if(buffer != null) buffer.close();
+        if (buffer != null)
+            buffer.close();
     }
 
 }
