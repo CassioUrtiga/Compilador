@@ -27,9 +27,12 @@ public class Main {
         //     System.err.println(e);
         // }
 
+        // var lexer1 = new Lexer("arquivo.mat");
+        // try(var parser = new ParserPrefix(lexer1)){
+        //     parser.parse();
+        // }
         var lexer1 = new Lexer("arquivo.mat");
-        System.out.println("rodou");
-        try(var parser = new ParserPrefix(lexer1)){
+        try(var parser = new ParserInfix(lexer1)){
             parser.parse();
         }
 

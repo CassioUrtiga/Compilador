@@ -63,12 +63,12 @@ public class ParserInfix implements Closeable{
 
     public void parse(){
         System.out.print(" INICIO PARSE: "+ lookAhead(1).lexema());
-        expr(); 
+        expr(); //3 -> 
         System.out.print(" FIM PARSE: "+ lookAhead(1).lexema()); 
     }   
     private void expr(){
         
-        termo();
+        termo();//3 ->
         while(lookAhead(1).type() == TokenType.OP_SUM || lookAhead(1).type() == TokenType.OP_SUB){
             Token op = lookAhead(1);
             match(op.type());
@@ -79,7 +79,7 @@ public class ParserInfix implements Closeable{
 
     private void termo(){
         
-        fator(); 
+        fator(); //3 -> 
         while(lookAhead(1).type() == TokenType.OP_MUL || lookAhead(1).type() == TokenType.OP_DIV){
             Token op = lookAhead(1);
             match(op.type());
@@ -90,6 +90,7 @@ public class ParserInfix implements Closeable{
     }
 
     private void fator(){
+        Token token = lookAhead(1);
         if (lookAhead(1).type() == TokenType.OP_DIV ||
             lookAhead(1).type() == TokenType.OP_MUL ||
             lookAhead(1).type() == TokenType.OP_SUB ||
@@ -97,23 +98,47 @@ public class ParserInfix implements Closeable{
             match(TokenType.CONST_INT);
         }
 
-        if(lookAhead(1).type() == TokenType.CONST_INT){
-            match(TokenType.CONST_INT);
+        if(lookAhead(1).type() == TokenType.CONST_INT || 
+           lookAhead(1).type() == TokenType.CONST_FLOAT){
+
+            token = lookAhead(1);
+            match(token.type());
+
             System.out.print(" "+ lookAhead(1).lexema());
-        }
 
-        if(lookAhead(1).type() == TokenType.ABRE_PAR){
+            // if (lookAhead(1).type() != TokenType.OP_DIV &&
+            //     lookAhead(1).type() != TokenType.OP_MUL &&
+            //     lookAhead(1).type() != TokenType.OP_SUB &&
+            //     lookAhead(1).type() != TokenType.OP_SUM &&
+            //     lookAhead(1).type() != TokenType.PONTO_VIRGULA&&
+            //     lookAhead(1).type() != TokenType.FECHA_PAR){
+            //     System.out.print(" opa: "+ lookAhead(1).lexema());
+            //     match(TokenType.OPERADOR);
+            // }
+            if (lookAhead(1).type() == TokenType.ABRE_PAR) {
+                System.out.print(" opa: "+ lookAhead(1).lexema());
+                match(TokenType.OPERADOR);
+            }
+        }else if(lookAhead(1).type() == TokenType.ABRE_PAR){
 
-            match(TokenType.ABRE_PAR); 
+            match(TokenType.ABRE_PAR);
+
+            if (lookAhead(1).type() == TokenType.FECHA_PAR) {
+                token = lookAhead(1);
+                match(TokenType.CONST_INT);
+            }
+
             System.out.print(" "+ lookAhead(1).lexema()); 
-            expr(); 
+            expr(); //1 -> )
             match(TokenType.FECHA_PAR);
-            System.out.print(" "+ lookAhead(1).lexema());
-        }
+            if (lookAhead(1).type() == TokenType.FECHA_PAR) {
+                match(TokenType.OPERADOR);
+            }
 
-        if(lookAhead(1).type() == TokenType.FECHA_PAR){
-            match(TokenType.OPERADOR);
             System.out.print(" "+ lookAhead(1).lexema());
+        }else if(lookAhead(1).type() == TokenType.FECHA_PAR){
+            match(TokenType.OPERADOR);
+            System.out.print(" opa: "+ lookAhead(1).lexema());
         }
         if (lookAhead(1).type() == TokenType.PONTO_VIRGULA) {
             match(TokenType.PONTO_VIRGULA);

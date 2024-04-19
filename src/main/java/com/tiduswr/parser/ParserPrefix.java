@@ -90,7 +90,7 @@ public class ParserPrefix implements Closeable{
     private void operando(){
         if (lookAhead(1).type() == TokenType.CONST_INT) {
             match(TokenType.CONST_INT);
-            System.out.println(lookAhead(1).lexema() + " ");
+            System.out.print(lookAhead(1).lexema() + " ");
         }
         if (lookAhead(1).type() == TokenType.OP_SUB ||
             lookAhead(1).type() == TokenType.OP_SUM ||
@@ -108,13 +108,13 @@ public class ParserPrefix implements Closeable{
     private void operador1(){
         Token op1 = lookAhead(1);
         match(op1.type());
-        System.out.println(lookAhead(1).lexema() + " ");
+        System.out.print(lookAhead(1).lexema() + " ");
     }
 
     private void operador2(){
         Token op2 = lookAhead(1);
         match(op2.type());
-        System.out.println(lookAhead(1).lexema() + " ");
+        System.out.print(lookAhead(1).lexema() + " ");
     }
     
 

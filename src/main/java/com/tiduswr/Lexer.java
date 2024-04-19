@@ -18,13 +18,10 @@ public class Lexer implements Closeable {
 
         while ((charAtual = buffer.readNextChar()) != Buffer.EOF) {
             char charConvertido = (char) charAtual;
-            System.out.println("charconvertido: " + charConvertido);
             // IGNORA ESPAÇOS EM BRANCO E PROCESSA O LEXEMA
             if (Character.isWhitespace(charConvertido)) {
-                System.out.println("vazio?: " + charConvertido);
 
                 if (lexema.length() > 0) {
-                    System.out.println("PROCESSA ESPACO: ");
                     return processaLexema(lexema.toString());
                 }
                 continue;
@@ -32,7 +29,6 @@ public class Lexer implements Closeable {
 
             if (Character.isDigit(charConvertido) || charConvertido == '.'
                     || (charConvertido == '-' && lexema.length() == 0)) {
-                System.out.println("digito || - || . : " + charConvertido);
 
                 if (charConvertido == '-' && lexema.length() == 0) {
                     lexema.append(charConvertido);
@@ -50,12 +46,10 @@ public class Lexer implements Closeable {
                         break;
                     }
                 }
-                System.out.println("PROCESSA: ");
                 return processaLexema(lexema.toString());
             }
             //TRATA COMENTARIOS
             if (charConvertido == '#') {
-                System.out.println("##?: " + charConvertido);
 
                 while ((charAtual = buffer.readNextChar()) != Buffer.EOF && charAtual != '\n') {
                 }
@@ -63,12 +57,10 @@ public class Lexer implements Closeable {
             }
 
             lexema.append(charConvertido);
-            System.out.println("PROCESSA: " + lexema);
             return processaLexema(lexema.toString());
         }
 
         if (lexema.length() > 0) {
-            System.out.println("PROCESSA: ");
             return processaLexema(lexema.toString());
         }
 
@@ -101,7 +93,6 @@ public class Lexer implements Closeable {
                 } else if (lexema.equals("")) {
                     return new Token(TokenType.EOF, null); // Fim de arquivo
                 } else {
-                    System.out.println("erro?: ");
                     throw new IllegalArgumentException("Erro de sintaxe: " + lexema);
                 }
         }
