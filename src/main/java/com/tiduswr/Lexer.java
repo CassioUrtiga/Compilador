@@ -80,15 +80,17 @@ public class Lexer implements Closeable{
             case ";":
                 return new Token(TokenType.PONTO_VIRGULA, lexema);
             default:
-                if (lexema.matches("-?\\d+(\\.\\d+)?")) {
-                    if (lexema.contains(".")) {
-                        return new Token(TokenType.CONST_FLOAT, lexema);
-                    } else {
-                        return new Token(TokenType.CONST_INT, lexema);
-                    }
-                }else {
-                    return new Token(TokenType.EOF, null);
+            if (lexema.matches("-?\\d+(\\.\\d+)?")) {
+                if (lexema.contains(".")) {
+                    return new Token(TokenType.CONST_FLOAT, lexema);
+                } else {
+                    return new Token(TokenType.CONST_INT, lexema);
                 }
+            } else if (lexema.equals("")) {
+                return new Token(TokenType.EOF, null); // Fim de arquivo
+            } else {
+                throw new IllegalArgumentException("Erro de sintaxe: " + lexema);
+            }
         }
     }
     
