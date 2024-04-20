@@ -7,7 +7,7 @@ import com.tiduswr.parser.ParserPrefix;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int parte = 2;
+        int parte = 1;
 
         switch (parte) {
             case 0:
